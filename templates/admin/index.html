@@ -1,0 +1,57 @@
+{% extends "admin/base.html" %}
+
+{% load i18n unfold %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_("Django site admin") }}{% endblock %}
+
+{% block branding %}
+    {% include "unfold/helpers/site_branding.html" %}
+{% endblock %}
+
+{% block content %}
+    {% component "unfold/components/container.html" %}
+        <div class="flex flex-col gap-8">
+
+            {# 1. Cards #}
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+                {% for card in dashboard_cards %}
+                    {% component "unfold/components/card.html" with href=card.link icon=card.icon %}
+                        {% component "unfold/components/text.html" %}
+                            {{ card.title }}
+                        {% endcomponent %}
+
+                        {% component "unfold/components/title.html" %}
+                            {{ card.value }}
+                        {% endcomponent %}
+                    {% endcomponent %}
+                {% endfor %}
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                {# 2. Bar chart #}
+                <div class="lg:col-span-2">
+                    {% component "unfold/components/card.html" with title="Posts per category" description="How many posts every category has" %}
+                        {% component "unfold/components/chart/bar.html" with data=posts_per_category_chart height=280 %}
+                        {% endcomponent %}
+                    {% endcomponent %}
+                </div>
+
+                {# 4. Progress bars #}
+                {% component "unfold/components/card.html" with title="Published vs drafts" description="Share of all posts" %}
+                    <div class="flex flex-col gap-8">
+                        {% for item in posts_progress %}
+                            {% component "unfold/components/progress.html" with title=item.title description=item.description value=item.value progress_class=item.progress_class %}
+                            {% endcomponent %}
+                        {% endfor %}
+                    </div>
+                {% endcomponent %}
+            </div>
+
+            {# 3. Table #}
+            {% component "unfold/components/card.html" with title="Top 5 authors" description="By number of posts" %}
+                {% component "unfold/components/table.html" with table=top_authors_table card_included=1 striped=1 %}
+                {% endcomponent %}
+            {% endcomponent %}
+        </div>
+    {% endcomponent %}
+{% endblock %}

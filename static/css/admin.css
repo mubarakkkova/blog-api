@@ -1,0 +1,9 @@
+/* Colors for the dashboard progress bars (Unfold paints every bar with 
+   the primary color, these classes win over it). */
+.progress-published {
+    background-color: oklch(72.3% 0.219 149.579) !important;
+}
+
+.progress-draft {
+    background-color: oklch(75% 0.183 55.934) !important;
+}
